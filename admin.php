@@ -500,6 +500,37 @@ if ($selectedSession) {
             opacity: 0.5;
         }
         
+        /* QR Code and Copy buttons */
+        .qr-btn, .copy-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+        
+        .qr-btn:hover, .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+        }
+        
+        .copy-btn {
+            background: rgba(39, 174, 96, 0.8);
+            border-color: rgba(39, 174, 96, 0.5);
+        }
+        
+        .copy-btn:hover {
+            background: rgba(39, 174, 96, 1);
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -541,14 +572,27 @@ if ($selectedSession) {
                 <?php foreach ($sessions as $session): ?>
                     <div class="session-item <?php echo ($selectedSession === $session['token']) ? 'active' : ''; ?>" 
                          onclick="selectSession('<?php echo $session['token']; ?>')">
-                        <div class="session-name"><?php echo htmlspecialchars($session['customer_name']); ?></div>
-                        <div class="session-meta">
-                            <?php echo substr($session['token'], 0, 16); ?>...<br>
-                            <?php echo date('M j, Y', strtotime($session['created_at'])); ?><br>
-                            <?php echo count(getSessionFiles($session['token'])); ?> files
-                        </div>
-                        <div class="session-status status-<?php echo $session['status']; ?>">
-                            <?php echo $session['status']; ?>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div style="flex: 1;">
+                                <div class="session-name"><?php echo htmlspecialchars($session['customer_name']); ?></div>
+                                <div class="session-meta">
+                                    <?php echo substr($session['token'], 0, 16); ?>...<br>
+                                    <?php echo date('M j, Y', strtotime($session['created_at'])); ?><br>
+                                    <?php echo count(getSessionFiles($session['token'])); ?> files
+                                </div>
+                                <div class="session-status status-<?php echo $session['status']; ?>">
+                                    <?php echo $session['status']; ?>
+                                </div>
+                            </div>
+                            <div style="margin-left: 10px;">
+                                <a href="qr.php?token=<?php echo urlencode($session['token']); ?>" 
+                                   target="_blank" 
+                                   onclick="event.stopPropagation()"
+                                   style="color: #bdc3c7; font-size: 16px; text-decoration: none; padding: 4px;"
+                                   title="Show QR Code">
+                                    📱
+                                </a>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -580,16 +624,30 @@ if ($selectedSession) {
                 <!-- Active Session Interface -->
                 <div class="session-interface">
                     <div class="session-header">
-                        <div class="session-title"><?php echo htmlspecialchars($currentSession['customer_name']); ?></div>
-                        <div class="session-info">
-                            Session: <?php echo $currentSession['token']; ?><br>
-                            <?php if ($currentSession['notes']): ?>
-                                <?php echo htmlspecialchars($currentSession['notes']); ?><br>
-                            <?php endif; ?>
-                            Share URL: <a href="<?php echo getSessionUrl($currentSession['token']); ?>" target="_blank" style="color: white; text-decoration: underline;">
-                                <?php echo getSessionUrl($currentSession['token']); ?>
-                            </a><br>
-                            Expires: <?php echo date('M j, Y', strtotime($currentSession['expires_at'])); ?>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px;">
+                            <div style="flex: 1; min-width: 200px;">
+                                <div class="session-title"><?php echo htmlspecialchars($currentSession['customer_name']); ?></div>
+                                <div class="session-info">
+                                    Session: <?php echo $currentSession['token']; ?><br>
+                                    <?php if ($currentSession['notes']): ?>
+                                        <?php echo htmlspecialchars($currentSession['notes']); ?><br>
+                                    <?php endif; ?>
+                                    Share URL: <a href="<?php echo getSessionUrl($currentSession['token']); ?>" target="_blank" style="color: white; text-decoration: underline;">
+                                        <?php echo getSessionUrl($currentSession['token']); ?>
+                                    </a><br>
+                                    Expires: <?php echo date('M j, Y', strtotime($currentSession['expires_at'])); ?>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <a href="qr.php?token=<?php echo urlencode($currentSession['token']); ?>" 
+                                   target="_blank" 
+                                   class="qr-btn">
+                                    📱 QR Code
+                                </a>
+                                <button onclick="copySessionUrl()" class="copy-btn">
+                                    📋 Copy URL
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
@@ -788,6 +846,39 @@ if ($selectedSession) {
             
             xhr.open('POST', 'admin.php');
             xhr.send(formData);
+        }
+        
+        // Copy session URL to clipboard
+        function copySessionUrl() {
+            const url = '<?php echo addslashes(getSessionUrl($currentSession['token'] ?? '')); ?>';
+            navigator.clipboard.writeText(url).then(function() {
+                // Show success feedback
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.style.background = 'rgba(39, 174, 96, 1)';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = 'rgba(39, 174, 96, 0.8)';
+                }, 2000);
+            }).catch(function() {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                // Show success feedback
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
         }
         
         // Close modal on escape key
