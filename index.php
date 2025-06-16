@@ -1,5 +1,5 @@
 <?php
-// Entry Point for File Transfer System
+// Entry Point for File Transfer System with Device Detection
 
 require_once 'functions.php';
 
@@ -12,24 +12,62 @@ if ($token) {
     
     if (!$session) {
         // Invalid token
-        showError('Invalid session token', 'The session token you provided is not valid or has been removed.');
+        showError('Invalid Session Token', 'The session token you provided is not valid or has been removed.');
     } elseif ($session['status'] === 'expired') {
         // Expired session
         showError('Session Expired', 'This session has expired. Please contact the sender for a new link.');
     } else {
-        // Valid session - show customer interface (will be implemented later)
-        echo "<h1>Customer Interface - Coming Soon</h1>";
-        echo "<p>Session: " . htmlspecialchars($session['customer_name']) . "</p>";
-        echo "<p>Token: " . htmlspecialchars($session['token']) . "</p>";
-        echo "<p>Status: " . htmlspecialchars($session['status']) . "</p>";
+        // Valid session - detect device type and show appropriate interface
+        $userAgent = $_SERVER['HTTP_USER_Agent'] ?? '';
+        $isDesktop = detectDesktopDevice($userAgent);
         
-        // Update activity
-        updateSessionActivity($token);
+        if ($isDesktop) {
+            // Desktop/Admin interface - redirect to admin with session selected
+            header('Location: admin.php?session=' . urlencode($token));
+            exit;
+        } else {
+            // Mobile/Customer interface
+            include 'customer.php';
+            exit;
+        }
     }
 } else {
     // No token provided - redirect to admin
     header('Location: admin.php');
     exit;
+}
+
+/**
+ * Detect if user is on desktop device (likely admin)
+ * @param string $userAgent
+ * @return bool
+ */
+function detectDesktopDevice($userAgent) {
+    // Check for mobile indicators
+    $mobileKeywords = [
+        'Mobile', 'Android', 'iPhone', 'iPad', 'iPod', 
+        'BlackBerry', 'Windows Phone', 'Opera Mini'
+    ];
+    
+    foreach ($mobileKeywords as $keyword) {
+        if (stripos($userAgent, $keyword) !== false) {
+            return false; // Mobile device detected
+        }
+    }
+    
+    // Check for desktop browsers
+    $desktopKeywords = [
+        'Windows NT', 'Macintosh', 'X11', 'Linux'
+    ];
+    
+    foreach ($desktopKeywords as $keyword) {
+        if (stripos($userAgent, $keyword) !== false) {
+            return true; // Desktop device detected
+        }
+    }
+    
+    // Default to mobile for unknown devices (safer for customer experience)
+    return false;
 }
 
 /**
@@ -46,30 +84,34 @@ function showError($title, $message) {
         <style>
             body {
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                background: #f5f5f5;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 margin: 0;
-                padding: 40px 20px;
-                text-align: center;
+                padding: 20px;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
             
             .error-container {
-                max-width: 500px;
-                margin: 0 auto;
+                max-width: 400px;
                 background: white;
-                padding: 40px;
-                border-radius: 8px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                padding: 40px 30px;
+                border-radius: 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                text-align: center;
             }
             
             .error-icon {
-                font-size: 48px;
+                font-size: 64px;
                 margin-bottom: 20px;
             }
             
             h1 {
                 color: #e74c3c;
-                margin-bottom: 20px;
+                margin-bottom: 15px;
                 font-size: 24px;
+                font-weight: 600;
             }
             
             p {
@@ -80,16 +122,18 @@ function showError($title, $message) {
             
             .btn {
                 display: inline-block;
-                background: #3498db;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 color: white;
-                padding: 12px 24px;
+                padding: 15px 30px;
                 text-decoration: none;
-                border-radius: 6px;
-                transition: background 0.3s;
+                border-radius: 50px;
+                font-weight: 500;
+                transition: transform 0.3s;
             }
             
             .btn:hover {
-                background: #2980b9;
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
             }
         </style>
     </head>
