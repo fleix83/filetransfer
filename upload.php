@@ -45,7 +45,7 @@ if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
                 $error = 'No file selected';
                 break;
             default:
-                $error = 'Upload failed';
+                $error = 'Upload failed - Error code: ' . $_FILES['file']['error'];
         }
     }
     http_response_code(400);
@@ -69,3 +69,4 @@ try {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
 ?>
+

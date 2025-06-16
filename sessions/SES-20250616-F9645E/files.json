@@ -5,6 +5,54 @@
         "file_size": 25,
         "mime_type": "text\/plain",
         "original_name": "robot.txt",
+        "download_count": 6
+    },
+    "GGG_Wegweiser.png": {
+        "uploaded_by": "customer",
+        "uploaded_at": "2025-06-16T11:56:57+02:00",
+        "file_size": 21928,
+        "mime_type": "image\/png",
+        "original_name": "GGG_Wegweiser.png",
+        "download_count": 4
+    },
+    "Am_Berg.jpg": {
+        "uploaded_by": "admin",
+        "uploaded_at": "2025-06-16T11:59:40+02:00",
+        "file_size": 6974716,
+        "mime_type": "image\/jpeg",
+        "original_name": "Am Berg.jpg",
+        "download_count": 6
+    },
+    "weissheimer_brienzergrat_IMG_6574_1.jpg": {
+        "uploaded_by": "admin",
+        "uploaded_at": "2025-06-16T12:01:59+02:00",
+        "file_size": 630004,
+        "mime_type": "image\/jpeg",
+        "original_name": "weissheimer_brienzergrat_IMG_6574.jpg",
+        "download_count": 0
+    },
+    "weissheimer_brienzergrat_IMG_6581.jpg": {
+        "uploaded_by": "admin",
+        "uploaded_at": "2025-06-16T12:02:49+02:00",
+        "file_size": 421566,
+        "mime_type": "image\/jpeg",
+        "original_name": "weissheimer_brienzergrat_IMG_6581.jpg",
+        "download_count": 1
+    },
+    "weissheimer_brienzergrat_IMG_6556.jpg": {
+        "uploaded_by": "customer",
+        "uploaded_at": "2025-06-16T12:04:09+02:00",
+        "file_size": 781736,
+        "mime_type": "image\/jpeg",
+        "original_name": "weissheimer_brienzergrat_IMG_6556.jpg",
+        "download_count": 0
+    },
+    "Bildschirmfoto_2025-06-04_um_13.52.21.png": {
+        "uploaded_by": "customer",
+        "uploaded_at": "2025-06-16T12:07:57+02:00",
+        "file_size": 337405,
+        "mime_type": "image\/png",
+        "original_name": "Bildschirmfoto 2025-06-04 um 13.52.21.png",
         "download_count": 0
     }
 }

@@ -1,12 +1,21 @@
 <?php
-// Admin Dashboard for File Transfer System
+// Admin Dashboard for File Transfer System - Redesigned UX
 
 require_once 'functions.php';
 
-// Handle session creation
+// Handle session creation and file operations
 $message = '';
 $messageType = '';
 $selectedSession = null;
+
+// Check for last accessed session in cookie
+if (isset($_COOKIE['last_session'])) {
+    $cookieSession = $_COOKIE['last_session'];
+    $testSession = getSession($cookieSession);
+    if ($testSession && $testSession['status'] === 'active') {
+        $selectedSession = $cookieSession;
+    }
+}
 
 // Handle different actions
 if ($_POST && isset($_POST['action'])) {
@@ -21,8 +30,12 @@ if ($_POST && isset($_POST['action'])) {
             try {
                 $token = createSession($customerName, $notes);
                 $sessionUrl = getSessionUrl($token);
-                $message = "Session created successfully! Token: <strong>$token</strong><br>
-                          Share this URL: <br><a href='$sessionUrl' target='_blank'>$sessionUrl</a>";
+                $selectedSession = $token;
+                
+                // Set cookie to remember this session
+                setcookie('last_session', $token, time() + (30 * 24 * 60 * 60), '/');
+                
+                $message = "Session created successfully! Share this URL:<br><a href='$sessionUrl' target='_blank'>$sessionUrl</a>";
                 $messageType = 'success';
             } catch (Exception $e) {
                 $message = 'Error creating session: ' . $e->getMessage();
@@ -46,13 +59,27 @@ if ($_POST && isset($_POST['action'])) {
     }
 }
 
-// Handle session selection for file management
+// Handle session selection
 if (isset($_GET['session'])) {
     $selectedSession = $_GET['session'];
+    // Set cookie to remember this session
+    setcookie('last_session', $selectedSession, time() + (30 * 24 * 60 * 60), '/');
 }
 
-// Get all sessions for display
+// Get all sessions for sidebar
 $sessions = getAllSessions();
+
+// Get current session data if selected
+$currentSession = null;
+$currentFiles = [];
+if ($selectedSession) {
+    $currentSession = getSession($selectedSession);
+    if ($currentSession && $currentSession['status'] === 'active') {
+        $currentFiles = getSessionFiles($selectedSession);
+    } else {
+        $selectedSession = null; // Invalid session
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -69,96 +96,244 @@ $sessions = getAllSessions();
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
+            background: #f8f9fa;
             color: #333;
             line-height: 1.6;
+            overflow-x: hidden;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .header {
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 350px;
+            height: 100vh;
             background: #2c3e50;
             color: white;
-            padding: 20px 0;
-            margin-bottom: 30px;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
         }
         
-        .header h1 {
-            text-align: center;
-            font-size: 28px;
-            font-weight: 300;
+        .sidebar.open {
+            left: 0;
         }
         
-        .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 30px;
-            margin-bottom: 30px;
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #34495e;
         }
         
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
+        .sidebar-header h2 {
+            font-size: 18px;
             font-weight: 500;
-            color: #555;
+            margin-bottom: 15px;
         }
         
-        input[type="text"],
-        textarea {
+        .new-session-btn {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        input[type="text"]:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #3498db;
-        }
-        
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        
-        .btn {
-            background: #3498db;
+            background: #27ae60;
             color: white;
-            padding: 12px 24px;
             border: none;
+            padding: 12px;
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
             transition: background 0.3s;
         }
         
-        .btn:hover {
-            background: #2980b9;
+        .new-session-btn:hover {
+            background: #219a52;
         }
         
-        .btn-primary {
+        .sessions-list {
+            padding: 0;
+        }
+        
+        .session-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #34495e;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .session-item:hover {
+            background: #34495e;
+        }
+        
+        .session-item.active {
             background: #3498db;
         }
         
-        .btn-primary:hover {
+        .session-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .session-meta {
+            font-size: 12px;
+            color: #bdc3c7;
+        }
+        
+        .session-status {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        
+        .status-active {
+            background: #27ae60;
+        }
+        
+        .status-expired {
+            background: #e74c3c;
+        }
+        
+        /* Sidebar Overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Main Content */
+        .main-content {
+            transition: margin-left 0.3s ease;
+            min-height: 100vh;
+        }
+        
+        .top-bar {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .menu-toggle {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        .menu-toggle:hover {
             background: #2980b9;
         }
         
+        .page-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .content-area {
+            padding: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        /* Welcome State */
+        .welcome-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .welcome-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-title {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+        
+        .welcome-text {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .create-session-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .create-session-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        /* Session Interface */
+        .session-interface {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .session-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+        }
+        
+        .session-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .session-info {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .session-body {
+            padding: 30px;
+        }
+        
+        /* Message Styles */
         .message {
             padding: 15px;
-            border-radius: 6px;
+            border-radius: 8px;
             margin-bottom: 20px;
         }
         
@@ -174,100 +349,78 @@ $sessions = getAllSessions();
             border: 1px solid #f5c6cb;
         }
         
-        .sessions-list {
-            margin-top: 20px;
-        }
-        
-        .session-item {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .session-info h4 {
-            margin-bottom: 5px;
-            color: #2c3e50;
-        }
-        
-        .session-meta {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .session-status {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        
-        .status-active {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .status-expired {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-        
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .session-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-        }
-        
-        /* File Management Styles */
+        /* File Upload Area */
         .file-upload-area {
             border: 2px dashed #3498db;
-            border-radius: 8px;
-            padding: 30px;
+            border-radius: 12px;
+            padding: 40px;
             text-align: center;
             background: #f8f9fa;
-            margin-bottom: 20px;
-            transition: border-color 0.3s;
+            margin-bottom: 30px;
+            transition: all 0.3s;
         }
         
-        .file-upload-area:hover {
-            border-color: #2980b9;
-        }
-        
+        .file-upload-area:hover,
         .file-upload-area.dragover {
             border-color: #2980b9;
             background: #e3f2fd;
+            transform: translateY(-2px);
         }
         
-        .file-list {
-            margin-top: 20px;
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            color: #3498db;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .upload-hint {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .choose-files-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .choose-files-btn:hover {
+            background: #2980b9;
+        }
+        
+        /* File List */
+        .files-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 18px;
         }
         
         .file-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px;
+            padding: 15px;
             border: 1px solid #dee2e6;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+        
+        .file-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
         }
         
         .file-info {
@@ -277,7 +430,7 @@ $sessions = getAllSessions();
         .file-name {
             font-weight: 500;
             color: #2c3e50;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
         
         .file-meta {
@@ -293,7 +446,12 @@ $sessions = getAllSessions();
         .btn-small {
             padding: 6px 12px;
             font-size: 12px;
+            border: none;
             border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
         
         .btn-download {
@@ -315,205 +473,339 @@ $sessions = getAllSessions();
         }
         
         .upload-progress {
-            margin-top: 10px;
-            height: 4px;
+            margin-top: 15px;
+            height: 6px;
             background: #ecf0f1;
-            border-radius: 2px;
+            border-radius: 3px;
             overflow: hidden;
             display: none;
         }
         
         .upload-progress-bar {
             height: 100%;
-            background: #3498db;
+            background: linear-gradient(90deg, #3498db, #2980b9);
             width: 0%;
             transition: width 0.3s;
         }
         
-        .session-selector {
-            margin-bottom: 20px;
+        .empty-files {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
         }
         
-        .session-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
         }
         
-        .session-tab {
-            padding: 8px 16px;
-            background: #ecf0f1;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background 0.3s;
-        }
-        
-        .session-tab:hover {
-            background: #d5dbdb;
-        }
-        
-        .session-tab.active {
-            background: #3498db;
-            color: white;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 280px;
+                left: -280px;
+            }
+            
+            .content-area {
+                padding: 20px;
+            }
+            
+            .session-body {
+                padding: 20px;
+            }
+            
+            .file-upload-area {
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="container">
-            <h1>File Transfer Admin Dashboard</h1>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>📁 Sessions</h2>
+            <button class="new-session-btn" onclick="showNewSessionForm()">+ New Session</button>
+        </div>
+        
+        <div class="sessions-list">
+            <?php if (empty($sessions)): ?>
+                <div style="padding: 20px; text-align: center; color: #bdc3c7;">
+                    <p>No sessions yet.<br>Create your first session!</p>
+                </div>
+            <?php else: ?>
+                <?php foreach ($sessions as $session): ?>
+                    <div class="session-item <?php echo ($selectedSession === $session['token']) ? 'active' : ''; ?>" 
+                         onclick="selectSession('<?php echo $session['token']; ?>')">
+                        <div class="session-name"><?php echo htmlspecialchars($session['customer_name']); ?></div>
+                        <div class="session-meta">
+                            <?php echo substr($session['token'], 0, 16); ?>...<br>
+                            <?php echo date('M j, Y', strtotime($session['created_at'])); ?><br>
+                            <?php echo count(getSessionFiles($session['token'])); ?> files
+                        </div>
+                        <div class="session-status status-<?php echo $session['status']; ?>">
+                            <?php echo $session['status']; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
     
-    <div class="container">
-        <div class="grid">
-            <!-- Session Creation Form -->
-            <div class="card">
-                <h2 style="margin-bottom: 20px; color: #2c3e50;">Create New Session</h2>
-                
-                <?php if ($message): ?>
-                    <div class="message <?php echo $messageType; ?>">
-                        <?php echo $message; ?>
-                    </div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-bar">
+            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+            <div class="page-title">
+                <?php if ($currentSession): ?>
+                    File Exchange - <?php echo htmlspecialchars($currentSession['customer_name']); ?>
+                <?php else: ?>
+                    File Transfer Dashboard
                 <?php endif; ?>
+            </div>
+        </div>
+        
+        <div class="content-area">
+            <?php if ($message): ?>
+                <div class="message <?php echo $messageType; ?>">
+                    <?php echo $message; ?>
+                </div>
+            <?php endif; ?>
+            
+            <?php if ($currentSession): ?>
+                <!-- Active Session Interface -->
+                <div class="session-interface">
+                    <div class="session-header">
+                        <div class="session-title"><?php echo htmlspecialchars($currentSession['customer_name']); ?></div>
+                        <div class="session-info">
+                            Session: <?php echo $currentSession['token']; ?><br>
+                            <?php if ($currentSession['notes']): ?>
+                                <?php echo htmlspecialchars($currentSession['notes']); ?><br>
+                            <?php endif; ?>
+                            Share URL: <a href="<?php echo getSessionUrl($currentSession['token']); ?>" target="_blank" style="color: white; text-decoration: underline;">
+                                <?php echo getSessionUrl($currentSession['token']); ?>
+                            </a><br>
+                            Expires: <?php echo date('M j, Y', strtotime($currentSession['expires_at'])); ?>
+                        </div>
+                    </div>
+                    
+                    <div class="session-body">
+                        <!-- File Upload Area -->
+                        <div class="file-upload-area" id="uploadArea">
+                            <div class="upload-icon">📁</div>
+                            <div class="upload-text">Drag and drop files here</div>
+                            <div class="upload-hint">or click to browse files</div>
+                            <input type="file" id="fileInput" multiple style="display: none;">
+                            <button type="button" class="choose-files-btn" onclick="document.getElementById('fileInput').click();">
+                                Choose Files
+                            </button>
+                            <div style="margin-top: 10px; font-size: 12px; color: #999;">
+                                Maximum file size: <?php echo formatFileSize(MAX_FILE_SIZE); ?>
+                            </div>
+                        </div>
+                        
+                        <div class="upload-progress" id="uploadProgress">
+                            <div class="upload-progress-bar" id="uploadProgressBar"></div>
+                        </div>
+                        
+                        <!-- Files List -->
+                        <div class="files-section">
+                            <h3>📋 Files (<?php echo count($currentFiles); ?>)</h3>
+                            
+                            <div id="filesList">
+                                <?php if (empty($currentFiles)): ?>
+                                    <div class="empty-files">
+                                        <div class="empty-icon">📄</div>
+                                        <p>No files uploaded yet.<br>Upload your first file above.</p>
+                                    </div>
+                                <?php else: ?>
+                                    <?php foreach ($currentFiles as $fileName => $fileInfo): ?>
+                                        <div class="file-item">
+                                            <div class="file-info">
+                                                <div class="file-name"><?php echo htmlspecialchars($fileInfo['original_name']); ?></div>
+                                                <div class="file-meta">
+                                                    <?php echo formatFileSize($fileInfo['file_size']); ?> • 
+                                                    Uploaded <?php echo date('M j, Y g:i A', strtotime($fileInfo['uploaded_at'])); ?> • 
+                                                    By <?php echo htmlspecialchars($fileInfo['uploaded_by']); ?>
+                                                    <?php if ($fileInfo['download_count'] > 0): ?>
+                                                        • Downloaded <?php echo $fileInfo['download_count']; ?> time(s)
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                            <div class="file-actions">
+                                                <a href="download.php?token=<?php echo urlencode($selectedSession); ?>&file=<?php echo urlencode($fileName); ?>" 
+                                                   class="btn-small btn-download">Download</a>
+                                                <button type="button" class="btn-small btn-delete" 
+                                                        onclick="deleteFile('<?php echo addslashes($selectedSession); ?>', '<?php echo addslashes($fileName); ?>')">
+                                                    Delete
+                                                </button>
+                                                <input type="hidden" value="<?php echo htmlspecialchars($fileName); ?>">
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php else: ?>
+                <!-- Welcome State -->
+                <div class="welcome-state">
+                    <div class="welcome-icon">🚀</div>
+                    <h1 class="welcome-title">Welcome to File Transfer</h1>
+                    <p class="welcome-text">Create a new session to start sharing files securely with your customers.</p>
+                    <button class="create-session-btn" onclick="showNewSessionForm()">Create New Session</button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    
+    <!-- New Session Modal -->
+    <div id="newSessionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000;">
+        <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+            <div style="background: white; padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; max-height: 90%; overflow-y: auto;">
+                <h2 style="margin-bottom: 20px; color: #2c3e50;">Create New Session</h2>
                 
                 <form method="POST">
                     <input type="hidden" name="action" value="create_session">
                     
-                    <div class="form-group">
-                        <label for="customer_name">Customer Name *</label>
+                    <div style="margin-bottom: 20px;">
+                        <label for="customer_name" style="display: block; margin-bottom: 5px; font-weight: 500;">Customer Name *</label>
                         <input type="text" id="customer_name" name="customer_name" 
+                               style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 16px;"
                                placeholder="Enter customer or company name" required>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="notes">Notes (Optional)</label>
+                    <div style="margin-bottom: 30px;">
+                        <label for="notes" style="display: block; margin-bottom: 5px; font-weight: 500;">Notes (Optional)</label>
                         <textarea id="notes" name="notes" 
+                                  style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 16px; resize: vertical; min-height: 80px;"
                                   placeholder="Project details, purpose, or any additional notes..."></textarea>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary">Create Session</button>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button type="button" onclick="hideNewSessionForm()" 
+                                style="background: #95a5a6; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer;">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                style="background: #3498db; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer;">
+                            Create Session
+                        </button>
+                    </div>
                 </form>
-            </div>
-            
-            <!-- File Management or Sessions List -->
-            <div class="card">
-                <?php if ($selectedSession): ?>
-                    <?php 
-                    $session = getSession($selectedSession);
-                    $files = getSessionFiles($selectedSession);
-                    ?>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h2 style="color: #2c3e50; margin: 0;">Manage Files - <?php echo htmlspecialchars($session['customer_name']); ?></h2>
-                        <a href="admin.php" class="btn" style="background: #95a5a6; text-decoration: none;">← Back to Sessions</a>
-                    </div>
-                    
-                    <!-- File Upload Area -->
-                    <div class="file-upload-area" id="uploadArea">
-                        <div id="uploadForm">
-                            <div style="font-size: 48px; margin-bottom: 10px;">📁</div>
-                            <p style="margin-bottom: 15px; color: #666;">Drag and drop files here or click to browse</p>
-                            <input type="file" id="fileInput" multiple style="display: none;">
-                            <button type="button" class="btn" onclick="document.getElementById('fileInput').click();">Choose Files</button>
-                            <p style="margin-top: 10px; font-size: 12px; color: #999;">
-                                Maximum file size: <?php echo formatFileSize(MAX_FILE_SIZE); ?>
-                            </p>
-                        </div>
-                        <div class="upload-progress" id="uploadProgress">
-                            <div class="upload-progress-bar" id="uploadProgressBar"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Files List -->
-                    <div class="file-list" id="filesList">
-                        <?php if (empty($files)): ?>
-                            <p style="color: #666; text-align: center; padding: 20px;">
-                                No files uploaded yet. Upload your first file above.
-                            </p>
-                        <?php else: ?>
-                            <?php foreach ($files as $fileName => $fileInfo): ?>
-                                <div class="file-item">
-                                    <div class="file-info">
-                                        <div class="file-name"><?php echo htmlspecialchars($fileInfo['original_name']); ?></div>
-                                        <div class="file-meta">
-                                            <?php echo formatFileSize($fileInfo['file_size']); ?> • 
-                                            Uploaded <?php echo date('M j, Y g:i A', strtotime($fileInfo['uploaded_at'])); ?> • 
-                                            By <?php echo htmlspecialchars($fileInfo['uploaded_by']); ?>
-                                            <?php if ($fileInfo['download_count'] > 0): ?>
-                                                • Downloaded <?php echo $fileInfo['download_count']; ?> time(s)
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                    <div class="file-actions">
-                                        <a href="download.php?token=<?php echo urlencode($selectedSession); ?>&file=<?php echo urlencode($fileName); ?>" 
-                                           class="btn btn-small btn-download">Download</a>
-                                        <form method="POST" style="display: inline;">
-                                            <input type="hidden" name="action" value="delete_file">
-                                            <input type="hidden" name="session_token" value="<?php echo htmlspecialchars($selectedSession); ?>">
-                                            <input type="hidden" name="file_name" value="<?php echo htmlspecialchars($fileName); ?>">
-                                            <button type="submit" class="btn btn-small btn-delete" 
-                                                    onclick="return confirm('Are you sure you want to delete this file?')">Delete</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                    
-                <?php else: ?>
-                    <h2 style="margin-bottom: 20px; color: #2c3e50;">Recent Sessions</h2>
-                    
-                    <?php if (empty($sessions)): ?>
-                        <p style="color: #666; text-align: center; padding: 20px;">
-                            No sessions created yet. Create your first session to get started.
-                        </p>
-                    <?php else: ?>
-                        <div class="sessions-list">
-                            <?php foreach (array_slice($sessions, 0, 10) as $session): ?>
-                                <div class="session-item">
-                                    <div class="session-info">
-                                        <h4><?php echo htmlspecialchars($session['customer_name']); ?></h4>
-                                        <div class="session-meta">
-                                            <strong>Token:</strong> <?php echo $session['token']; ?><br>
-                                            <strong>Created:</strong> <?php echo date('M j, Y g:i A', strtotime($session['created_at'])); ?><br>
-                                            <?php if ($session['notes']): ?>
-                                                <strong>Notes:</strong> <?php echo htmlspecialchars($session['notes']); ?><br>
-                                            <?php endif; ?>
-                                            <strong>URL:</strong> <a href="<?php echo getSessionUrl($session['token']); ?>" target="_blank">
-                                                <?php echo getSessionUrl($session['token']); ?>
-                                            </a><br>
-                                            <strong>Files:</strong> <?php echo count(getSessionFiles($session['token'])); ?> uploaded
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                                        <div class="session-status status-<?php echo $session['status']; ?>">
-                                            <?php echo $session['status']; ?>
-                                        </div>
-                                        <a href="admin.php?session=<?php echo urlencode($session['token']); ?>" 
-                                           class="btn btn-small" style="text-decoration: none; text-align: center;">Manage Files</a>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-                <?php endif; ?>
             </div>
         </div>
     </div>
     
     <script>
-        // File upload functionality
+        // Sidebar functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+        
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+        
+        // Close sidebar when clicking overlay
+        document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+        
+        // Session selection
+        function selectSession(token) {
+            window.location.href = 'admin.php?session=' + encodeURIComponent(token);
+        }
+        
+        // New session modal
+        function showNewSessionForm() {
+            document.getElementById('newSessionModal').style.display = 'block';
+            closeSidebar();
+        }
+        
+        function hideNewSessionForm() {
+            document.getElementById('newSessionModal').style.display = 'none';
+        }
+        
+        // Delete file function (AJAX to avoid page reload)
+        function deleteFile(sessionToken, fileName) {
+            if (!confirm('Are you sure you want to delete this file?')) {
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('action', 'delete_file');
+            formData.append('session_token', sessionToken);
+            formData.append('file_name', fileName);
+            
+            const xhr = new XMLHttpRequest();
+            xhr.addEventListener('load', function() {
+                if (xhr.status === 200) {
+                    // Remove the file item from the list
+                    const fileItems = document.querySelectorAll('.file-item');
+                    fileItems.forEach(item => {
+                        if (item.querySelector('input[value="' + fileName + '"]')) {
+                            item.remove();
+                        }
+                    });
+                    
+                    // Update file count in header
+                    const filesSection = document.querySelector('.files-section h3');
+                    if (filesSection) {
+                        const currentCount = parseInt(filesSection.textContent.match(/\d+/)[0]);
+                        filesSection.textContent = `📋 Files (${currentCount - 1})`;
+                    }
+                    
+                    // Show empty state if no files left
+                    const remainingFiles = document.querySelectorAll('.file-item').length;
+                    if (remainingFiles === 0) {
+                        document.getElementById('filesList').innerHTML = `
+                            <div class="empty-files">
+                                <div class="empty-icon">📄</div>
+                                <p>No files uploaded yet.<br>Upload your first file above.</p>
+                            </div>
+                        `;
+                    }
+                } else {
+                    alert('Error deleting file');
+                }
+            });
+            
+            xhr.addEventListener('error', function() {
+                alert('Error deleting file');
+            });
+            
+            xhr.open('POST', 'admin.php');
+            xhr.send(formData);
+        }
+        
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideNewSessionForm();
+                closeSidebar();
+            }
+        });
+        
+        // File upload functionality (only if session is active)
+        <?php if ($currentSession): ?>
         document.addEventListener('DOMContentLoaded', function() {
             const uploadArea = document.getElementById('uploadArea');
             const fileInput = document.getElementById('fileInput');
             const uploadProgress = document.getElementById('uploadProgress');
             const uploadProgressBar = document.getElementById('uploadProgressBar');
             const filesList = document.getElementById('filesList');
-            
-            if (!uploadArea || !fileInput) return; // Only run on file management page
             
             // Drag and drop functionality
             uploadArea.addEventListener('dragover', function(e) {
@@ -554,7 +846,7 @@ $sessions = getAllSessions();
             function uploadFile(file) {
                 const formData = new FormData();
                 formData.append('file', file);
-                formData.append('session_token', '<?php echo $selectedSession; ?>');
+                formData.append('session_token', '<?php echo addslashes($selectedSession); ?>');
                 formData.append('uploaded_by', 'admin');
                 
                 // Show progress
@@ -603,6 +895,7 @@ $sessions = getAllSessions();
                 xhr.send(formData);
             }
         });
+        <?php endif; ?>
     </script>
 </body>
 </html>
