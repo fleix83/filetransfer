@@ -40,8 +40,8 @@ function showCustomerError($title, $message) {
         <title><?php echo htmlspecialchars($title); ?> - File Exchange</title>
         <style>
             body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+                background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
                 margin: 0;
                 padding: 20px;
                 min-height: 100vh;
@@ -53,26 +53,30 @@ function showCustomerError($title, $message) {
             .error-container {
                 max-width: 400px;
                 background: white;
-                padding: 40px 30px;
-                border-radius: 20px;
-                box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                padding: 48px 32px;
+                border-radius: 16px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1);
                 text-align: center;
+                border: 1px solid rgba(255, 255, 255, 0.1);
             }
             
             .error-icon {
-                font-size: 64px;
-                margin-bottom: 20px;
+                font-size: 56px;
+                margin-bottom: 24px;
+                opacity: 0.8;
             }
             
             h1 {
-                color: #e74c3c;
-                margin-bottom: 15px;
+                color: #e53e3e;
+                margin-bottom: 16px;
                 font-size: 24px;
-                font-weight: 600;
+                font-weight: 500;
+                font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+                letter-spacing: -0.01em;
             }
             
             p {
-                color: #666;
+                color: #718096;
                 line-height: 1.6;
                 margin-bottom: 0;
             }
@@ -104,11 +108,11 @@ function showCustomerError($title, $message) {
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+            background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            color: #2d3748;
         }
         
         .container {
@@ -118,14 +122,16 @@ function showCustomerError($title, $message) {
         
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
             color: white;
         }
         
         .header h1 {
-            font-size: 28px;
-            font-weight: 300;
-            margin-bottom: 10px;
+            font-size: 32px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            letter-spacing: -0.02em;
         }
         
         .header p {
@@ -135,118 +141,131 @@ function showCustomerError($title, $message) {
         
         .card {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1);
+            padding: 32px;
             margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .session-info {
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #ecf0f1;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .session-info h2 {
-            color: #2c3e50;
-            font-size: 22px;
+            color: #2d3748;
+            font-size: 24px;
             margin-bottom: 8px;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-weight: 500;
+            letter-spacing: -0.01em;
         }
         
         .session-info p {
-            color: #7f8c8d;
+            color: #718096;
             font-size: 14px;
+            line-height: 1.5;
         }
         
-        /* Upload Area */
+        /* Upload Area - Anthropic Clean Style */
         .upload-section {
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
         
         .upload-area {
-            border: 2px dashed #27ae60;
-            border-radius: 15px;
-            padding: 40px 20px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            padding: 48px 24px;
             text-align: center;
-            background: #f8f9fa;
-            transition: all 0.3s;
+            background: #f7fafc;
+            transition: all 0.2s;
             cursor: pointer;
         }
         
         .upload-area:hover,
         .upload-area.dragover {
-            border-color: #219a52;
-            background: #e8f5e8;
+            border-color: #3182ce;
+            background: #ebf8ff;
             transform: translateY(-2px);
         }
         
         .upload-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
+            font-size: 40px;
+            margin-bottom: 16px;
+            opacity: 0.6;
         }
         
         .upload-text {
-            color: #27ae60;
+            color: #3182ce;
             font-weight: 500;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 16px;
         }
         
         .upload-hint {
-            color: #7f8c8d;
+            color: #718096;
             font-size: 12px;
         }
         
         .btn {
-            background: #27ae60;
+            background: #3182ce;
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
+            padding: 16px 32px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             width: 100%;
-            margin-top: 15px;
+            margin-top: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
         }
         
         .btn:hover {
-            background: #219a52;
+            background: #2c5aa0;
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
+            box-shadow: 0 10px 20px rgba(49, 130, 206, 0.3);
         }
         
         .btn:active {
             transform: translateY(0);
         }
         
-        /* Files List */
+        /* Files List - Anthropic Style */
         .files-section h3 {
-            color: #2c3e50;
+            color: #2d3748;
             margin-bottom: 20px;
             font-size: 18px;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-weight: 500;
         }
         
         .file-item {
-            background: #f8f9fa;
-            border-radius: 15px;
+            background: #f7fafc;
+            border-radius: 12px;
             padding: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            transition: all 0.3s;
+            transition: all 0.2s;
             cursor: pointer;
+            border: 1px solid #e2e8f0;
         }
         
         .file-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
+            background: #ebf8ff;
+            transform: translateX(4px);
+            border-color: #3182ce;
         }
         
         .file-icon {
-            font-size: 32px;
-            margin-right: 15px;
+            font-size: 28px;
+            margin-right: 16px;
+            opacity: 0.8;
         }
         
         .file-info {
@@ -255,38 +274,39 @@ function showCustomerError($title, $message) {
         
         .file-name {
             font-weight: 500;
-            color: #2c3e50;
-            margin-bottom: 5px;
-            font-size: 16px;
+            color: #2d3748;
+            margin-bottom: 4px;
+            font-size: 15px;
         }
         
         .file-meta {
-            color: #7f8c8d;
+            color: #718096;
             font-size: 12px;
         }
         
         .download-icon {
-            color: #3498db;
-            font-size: 24px;
+            color: #3182ce;
+            font-size: 20px;
+            opacity: 0.7;
         }
         
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: #7f8c8d;
+            padding: 48px 24px;
+            color: #718096;
         }
         
         .empty-icon {
-            font-size: 64px;
-            margin-bottom: 15px;
-            opacity: 0.5;
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.4;
         }
         
-        /* Upload Progress */
+        /* Upload Progress - Anthropic Style */
         .upload-progress {
-            margin-top: 15px;
+            margin-top: 16px;
             height: 6px;
-            background: #ecf0f1;
+            background: #e2e8f0;
             border-radius: 3px;
             overflow: hidden;
             display: none;
@@ -294,28 +314,30 @@ function showCustomerError($title, $message) {
         
         .upload-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            background: linear-gradient(90deg, #3182ce, #2c5aa0);
             width: 0%;
             transition: width 0.3s;
         }
         
         .upload-status {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 10px;
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
             text-align: center;
             font-size: 14px;
             display: none;
         }
         
         .upload-status.success {
-            background: #d4edda;
-            color: #155724;
+            background: #f0fff4;
+            color: #2f855a;
+            border: 1px solid #9ae6b4;
         }
         
         .upload-status.error {
-            background: #f8d7da;
-            color: #721c24;
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
         }
         
         /* Responsive */

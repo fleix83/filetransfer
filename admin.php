@@ -95,25 +95,33 @@ if ($selectedSession) {
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8f9fa;
-            color: #333;
+            font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+            background: #faf9f7;
+            color: #2d3748;
             line-height: 1.6;
             overflow-x: hidden;
         }
         
-        /* Sidebar Styles */
+        /* Typography Hierarchy - Anthropic Style */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+        
+        /* Sidebar Styles - Anthropic Deep Blue */
         .sidebar {
             position: fixed;
             top: 0;
             left: -350px;
             width: 350px;
             height: 100vh;
-            background: #2c3e50;
-            color: white;
+            background: #1a2332;
+            color: #e2e8f0;
             transition: left 0.3s ease;
             z-index: 1000;
             overflow-y: auto;
+            border-right: 1px solid #2d3748;
         }
         
         .sidebar.open {
@@ -121,31 +129,35 @@ if ($selectedSession) {
         }
         
         .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid #34495e;
+            padding: 24px;
+            border-bottom: 1px solid #2d3748;
         }
         
         .sidebar-header h2 {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 500;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
+            color: #f7fafc;
+            letter-spacing: -0.01em;
         }
         
         .new-session-btn {
             width: 100%;
-            background: #27ae60;
+            background: #3182ce;
             color: white;
             border: none;
-            padding: 12px;
-            border-radius: 6px;
+            padding: 12px 16px;
+            border-radius: 8px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.2s;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
         }
         
         .new-session-btn:hover {
-            background: #219a52;
+            background: #2c5aa0;
+            transform: translateY(-1px);
         }
         
         .sessions-list {
@@ -153,46 +165,53 @@ if ($selectedSession) {
         }
         
         .session-item {
-            padding: 15px 20px;
-            border-bottom: 1px solid #34495e;
+            padding: 16px 24px;
+            border-bottom: 1px solid #2d3748;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.2s;
         }
         
         .session-item:hover {
-            background: #34495e;
+            background: #2d3748;
         }
         
         .session-item.active {
-            background: #3498db;
+            background: #3182ce;
+            border-left: 3px solid #4299e1;
         }
         
         .session-name {
             font-weight: 500;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            color: #f7fafc;
+            font-size: 14px;
         }
         
         .session-meta {
             font-size: 12px;
-            color: #bdc3c7;
+            color: #a0aec0;
+            line-height: 1.4;
         }
         
         .session-status {
             display: inline-block;
-            padding: 2px 6px;
-            border-radius: 3px;
+            padding: 2px 8px;
+            border-radius: 4px;
             font-size: 10px;
-            font-weight: bold;
+            font-weight: 600;
             text-transform: uppercase;
-            margin-top: 5px;
+            margin-top: 6px;
+            letter-spacing: 0.05em;
         }
         
         .status-active {
-            background: #27ae60;
+            background: rgba(56, 178, 172, 0.2);
+            color: #38b2ac;
         }
         
         .status-expired {
-            background: #e74c3c;
+            background: rgba(245, 101, 101, 0.2);
+            color: #f56565;
         }
         
         /* Sidebar Overlay */
@@ -214,7 +233,7 @@ if ($selectedSession) {
             visibility: visible;
         }
         
-        /* Main Content */
+        /* Main Content - Anthropic Style */
         .main-content {
             transition: margin-left 0.3s ease;
             min-height: 100vh;
@@ -222,205 +241,230 @@ if ($selectedSession) {
         
         .top-bar {
             background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 15px 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            padding: 16px 24px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .menu-toggle {
-            background: #3498db;
+            background: #3182ce;
             color: white;
             border: none;
             padding: 10px 12px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
-            transition: background 0.3s;
+            transition: all 0.2s;
         }
         
         .menu-toggle:hover {
-            background: #2980b9;
+            background: #2c5aa0;
+            transform: translateY(-1px);
         }
         
         .page-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 500;
-            color: #2c3e50;
+            color: #2d3748;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
         }
         
         .content-area {
-            padding: 30px;
+            padding: 32px;
             max-width: 1000px;
             margin: 0 auto;
         }
         
-        /* Welcome State */
+        /* Welcome State - Anthropic Clean Design */
         .welcome-state {
             text-align: center;
-            padding: 60px 20px;
+            padding: 80px 32px;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
         }
         
         .welcome-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
+            font-size: 56px;
+            margin-bottom: 24px;
+            opacity: 0.7;
         }
         
         .welcome-title {
-            font-size: 28px;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-weight: 300;
+            font-size: 32px;
+            color: #2d3748;
+            margin-bottom: 16px;
+            font-weight: 500;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            letter-spacing: -0.02em;
         }
         
         .welcome-text {
-            color: #7f8c8d;
-            margin-bottom: 30px;
+            color: #718096;
+            margin-bottom: 32px;
             font-size: 16px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
         }
         
         .create-session-btn {
-            background: #3498db;
+            background: #3182ce;
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 16px 32px;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
         }
         
         .create-session-btn:hover {
-            background: #2980b9;
+            background: #2c5aa0;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
         }
         
-        /* Session Interface */
+        /* Session Interface - Anthropic Styling */
         .session-interface {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
             overflow: hidden;
+            border: 1px solid #e2e8f0;
         }
         
         .session-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
             color: white;
-            padding: 25px 30px;
+            padding: 32px;
         }
         
         .session-title {
             font-size: 24px;
             font-weight: 500;
             margin-bottom: 8px;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            letter-spacing: -0.01em;
         }
         
         .session-info {
             opacity: 0.9;
             font-size: 14px;
+            line-height: 1.5;
         }
         
         .session-body {
-            padding: 30px;
+            padding: 32px;
         }
         
-        /* Message Styles */
+        /* Message Styles - Anthropic Muted Palette */
         .message {
-            padding: 15px;
+            padding: 16px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            border: 1px solid;
         }
         
         .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: #f0fff4;
+            color: #2f855a;
+            border-color: #9ae6b4;
         }
         
         .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: #fed7d7;
+            color: #c53030;
+            border-color: #feb2b2;
         }
         
-        /* File Upload Area */
+        /* File Upload Area - Clean Anthropic Style */
         .file-upload-area {
-            border: 2px dashed #3498db;
+            border: 2px dashed #cbd5e0;
             border-radius: 12px;
-            padding: 40px;
+            padding: 48px 32px;
             text-align: center;
-            background: #f8f9fa;
-            margin-bottom: 30px;
-            transition: all 0.3s;
+            background: #f7fafc;
+            margin-bottom: 32px;
+            transition: all 0.2s;
         }
         
         .file-upload-area:hover,
         .file-upload-area.dragover {
-            border-color: #2980b9;
-            background: #e3f2fd;
-            transform: translateY(-2px);
+            border-color: #3182ce;
+            background: #ebf8ff;
+            transform: translateY(-1px);
         }
         
         .upload-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
+            font-size: 40px;
+            margin-bottom: 16px;
+            opacity: 0.6;
         }
         
         .upload-text {
-            color: #3498db;
+            color: #3182ce;
             font-weight: 500;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 16px;
         }
         
         .upload-hint {
-            color: #7f8c8d;
+            color: #718096;
             font-size: 14px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         
         .choose-files-btn {
-            background: #3498db;
+            background: #3182ce;
             color: white;
             border: none;
             padding: 12px 24px;
             border-radius: 6px;
             font-size: 14px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.2s;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-weight: 500;
         }
         
         .choose-files-btn:hover {
-            background: #2980b9;
+            background: #2c5aa0;
+            transform: translateY(-1px);
         }
         
-        /* File List */
+        /* File List - Anthropic Clean Design */
         .files-section h3 {
-            color: #2c3e50;
+            color: #2d3748;
             margin-bottom: 20px;
             font-size: 18px;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-weight: 500;
         }
         
         .file-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            border: 1px solid #dee2e6;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
             border-radius: 8px;
-            margin-bottom: 10px;
-            background: #f8f9fa;
-            transition: all 0.3s;
+            margin-bottom: 8px;
+            background: #fafafa;
+            transition: all 0.2s;
         }
         
         .file-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
+            background: #f1f5f9;
+            transform: translateX(4px);
+            border-color: #cbd5e0;
         }
         
         .file-info {
@@ -429,13 +473,14 @@ if ($selectedSession) {
         
         .file-name {
             font-weight: 500;
-            color: #2c3e50;
-            margin-bottom: 5px;
+            color: #2d3748;
+            margin-bottom: 4px;
+            font-size: 14px;
         }
         
         .file-meta {
             font-size: 12px;
-            color: #666;
+            color: #718096;
         }
         
         .file-actions {
@@ -449,27 +494,30 @@ if ($selectedSession) {
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             text-decoration: none;
             display: inline-block;
+            font-weight: 500;
         }
         
         .btn-download {
-            background: #27ae60;
+            background: #38b2ac;
             color: white;
         }
         
         .btn-download:hover {
-            background: #219a52;
+            background: #319795;
+            transform: translateY(-1px);
         }
         
         .btn-delete {
-            background: #e74c3c;
+            background: #e53e3e;
             color: white;
         }
         
         .btn-delete:hover {
-            background: #c0392b;
+            background: #c53030;
+            transform: translateY(-1px);
         }
         
         .upload-progress {
@@ -490,45 +538,45 @@ if ($selectedSession) {
         
         .empty-files {
             text-align: center;
-            padding: 40px;
-            color: #7f8c8d;
+            padding: 48px 24px;
+            color: #718096;
         }
         
         .empty-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
+            font-size: 40px;
+            margin-bottom: 16px;
             opacity: 0.5;
         }
         
-        /* QR Code and Copy buttons */
+        /* QR Code and Copy buttons - Anthropic Style */
         .qr-btn, .copy-btn {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 8px 16px;
             border-radius: 6px;
             font-size: 12px;
             font-weight: 500;
             text-decoration: none;
             display: inline-block;
-            transition: all 0.3s;
+            transition: all 0.2s;
             cursor: pointer;
             backdrop-filter: blur(10px);
         }
         
         .qr-btn:hover, .copy-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
             transform: translateY(-1px);
         }
         
         .copy-btn {
-            background: rgba(39, 174, 96, 0.8);
-            border-color: rgba(39, 174, 96, 0.5);
+            background: rgba(56, 178, 172, 0.8);
+            border-color: rgba(56, 178, 172, 0.5);
         }
         
         .copy-btn:hover {
-            background: rgba(39, 174, 96, 1);
+            background: rgba(56, 178, 172, 0.9);
         }
         
         /* Responsive */

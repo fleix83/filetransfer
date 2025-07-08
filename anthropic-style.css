@@ -1,0 +1,401 @@
+/* Anthropic Design System - Core Styles */
+/* Based on Anthropic's brand guidelines: Deep blue primary, muted warm palette, Styrene/Tiempos typography */
+
+:root {
+    /* Anthropic Color System - Deep Blue Primary */
+    --anthropic-blue-50: #ebf8ff;
+    --anthropic-blue-100: #bee3f8;
+    --anthropic-blue-200: #90cdf4;
+    --anthropic-blue-300: #63b3ed;
+    --anthropic-blue-400: #4299e1;
+    --anthropic-blue-500: #3182ce;
+    --anthropic-blue-600: #2c5aa0;
+    --anthropic-blue-700: #2a69ac;
+    --anthropic-blue-800: #1e4d72;
+    --anthropic-blue-900: #1a365d;
+    
+    /* Muted Warm Palette */
+    --anthropic-gray-50: #faf9f7;
+    --anthropic-gray-100: #f7fafc;
+    --anthropic-gray-200: #e2e8f0;
+    --anthropic-gray-300: #cbd5e0;
+    --anthropic-gray-400: #a0aec0;
+    --anthropic-gray-500: #718096;
+    --anthropic-gray-600: #4a5568;
+    --anthropic-gray-700: #2d3748;
+    --anthropic-gray-800: #1a202c;
+    --anthropic-gray-900: #171923;
+    
+    /* Dark Blue for Sidebar */
+    --anthropic-dark-blue: #1a2332;
+    --anthropic-dark-blue-light: #2d3748;
+    
+    /* Semantic Colors */
+    --anthropic-success: #38b2ac;
+    --anthropic-success-light: #81e6d9;
+    --anthropic-success-bg: #f0fff4;
+    --anthropic-error: #e53e3e;
+    --anthropic-error-light: #feb2b2;
+    --anthropic-error-bg: #fed7d7;
+    --anthropic-warning: #d69e2e;
+    --anthropic-warning-light: #faf089;
+    --anthropic-warning-bg: #fffff0;
+    
+    /* Typography */
+    --anthropic-font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+    --anthropic-font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    
+    /* Spacing Scale */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+    --space-24: 6rem;
+    
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-xl: 0 20px 40px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1);
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.2s ease;
+    --transition-slow: 0.3s ease;
+}
+
+/* Typography Hierarchy - Anthropic Style */
+.anthropic-text {
+    font-family: var(--anthropic-font-serif);
+    color: var(--anthropic-gray-700);
+    line-height: 1.6;
+}
+
+.anthropic-heading {
+    font-family: var(--anthropic-font-sans);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--anthropic-gray-700);
+}
+
+.anthropic-heading-xl {
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+}
+
+.anthropic-heading-lg {
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+}
+
+.anthropic-heading-md {
+    font-size: 1.125rem;
+}
+
+.anthropic-heading-sm {
+    font-size: 1rem;
+}
+
+/* Button System */
+.anthropic-btn {
+    font-family: var(--anthropic-font-sans);
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.anthropic-btn:hover {
+    transform: translateY(-1px);
+}
+
+.anthropic-btn:active {
+    transform: translateY(0);
+}
+
+.anthropic-btn-primary {
+    background: var(--anthropic-blue-500);
+    color: white;
+    padding: var(--space-3) var(--space-6);
+}
+
+.anthropic-btn-primary:hover {
+    background: var(--anthropic-blue-600);
+    box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+}
+
+.anthropic-btn-secondary {
+    background: var(--anthropic-gray-100);
+    color: var(--anthropic-gray-700);
+    padding: var(--space-3) var(--space-6);
+}
+
+.anthropic-btn-secondary:hover {
+    background: var(--anthropic-gray-200);
+}
+
+.anthropic-btn-success {
+    background: var(--anthropic-success);
+    color: white;
+    padding: var(--space-3) var(--space-6);
+}
+
+.anthropic-btn-success:hover {
+    background: #319795;
+}
+
+.anthropic-btn-danger {
+    background: var(--anthropic-error);
+    color: white;
+    padding: var(--space-3) var(--space-6);
+}
+
+.anthropic-btn-danger:hover {
+    background: #c53030;
+}
+
+.anthropic-btn-sm {
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.75rem;
+}
+
+.anthropic-btn-lg {
+    padding: var(--space-4) var(--space-8);
+    font-size: 1rem;
+}
+
+/* Card System */
+.anthropic-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--anthropic-gray-200);
+    overflow: hidden;
+}
+
+.anthropic-card-lg {
+    box-shadow: var(--shadow-xl);
+}
+
+.anthropic-card-header {
+    padding: var(--space-8);
+    background: linear-gradient(135deg, var(--anthropic-blue-500) 0%, var(--anthropic-blue-600) 100%);
+    color: white;
+}
+
+.anthropic-card-body {
+    padding: var(--space-8);
+}
+
+.anthropic-card-body-lg {
+    padding: var(--space-10);
+}
+
+/* Form Elements */
+.anthropic-input {
+    font-family: var(--anthropic-font-serif);
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border: 2px solid var(--anthropic-gray-300);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: all var(--transition-normal);
+    background: white;
+    color: var(--anthropic-gray-700);
+}
+
+.anthropic-input:focus {
+    outline: none;
+    border-color: var(--anthropic-blue-500);
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+.anthropic-textarea {
+    font-family: var(--anthropic-font-serif);
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border: 2px solid var(--anthropic-gray-300);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: all var(--transition-normal);
+    background: white;
+    color: var(--anthropic-gray-700);
+    resize: vertical;
+    min-height: 80px;
+}
+
+.anthropic-textarea:focus {
+    outline: none;
+    border-color: var(--anthropic-blue-500);
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+.anthropic-label {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-weight: 500;
+    color: var(--anthropic-gray-700);
+    font-family: var(--anthropic-font-sans);
+}
+
+/* Alert System */
+.anthropic-alert {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-6);
+    border: 1px solid;
+}
+
+.anthropic-alert-success {
+    background: var(--anthropic-success-bg);
+    color: #2f855a;
+    border-color: var(--anthropic-success-light);
+}
+
+.anthropic-alert-error {
+    background: var(--anthropic-error-bg);
+    color: #c53030;
+    border-color: var(--anthropic-error-light);
+}
+
+.anthropic-alert-warning {
+    background: var(--anthropic-warning-bg);
+    color: #d69e2e;
+    border-color: var(--anthropic-warning-light);
+}
+
+/* Upload Area */
+.anthropic-upload-area {
+    border: 2px dashed var(--anthropic-gray-300);
+    border-radius: var(--radius-lg);
+    padding: var(--space-12) var(--space-8);
+    text-align: center;
+    background: var(--anthropic-gray-100);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+}
+
+.anthropic-upload-area:hover,
+.anthropic-upload-area.dragover {
+    border-color: var(--anthropic-blue-500);
+    background: var(--anthropic-blue-50);
+    transform: translateY(-1px);
+}
+
+/* File List Items */
+.anthropic-file-item {
+    display: flex;
+    align-items: center;
+    padding: var(--space-4);
+    border: 1px solid var(--anthropic-gray-200);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-2);
+    background: var(--anthropic-gray-50);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+}
+
+.anthropic-file-item:hover {
+    background: var(--anthropic-blue-50);
+    border-color: var(--anthropic-blue-300);
+    transform: translateX(4px);
+}
+
+/* Progress Bar */
+.anthropic-progress {
+    height: 6px;
+    background: var(--anthropic-gray-200);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.anthropic-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--anthropic-blue-500), var(--anthropic-blue-600));
+    transition: width var(--transition-slow);
+}
+
+/* Utilities */
+.anthropic-text-muted {
+    color: var(--anthropic-gray-500);
+}
+
+.anthropic-text-sm {
+    font-size: 0.875rem;
+}
+
+.anthropic-text-xs {
+    font-size: 0.75rem;
+}
+
+.anthropic-mb-4 {
+    margin-bottom: var(--space-4);
+}
+
+.anthropic-mb-6 {
+    margin-bottom: var(--space-6);
+}
+
+.anthropic-mb-8 {
+    margin-bottom: var(--space-8);
+}
+
+.anthropic-p-4 {
+    padding: var(--space-4);
+}
+
+.anthropic-p-6 {
+    padding: var(--space-6);
+}
+
+.anthropic-p-8 {
+    padding: var(--space-8);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .anthropic-card-body {
+        padding: var(--space-6);
+    }
+    
+    .anthropic-upload-area {
+        padding: var(--space-8) var(--space-6);
+    }
+    
+    .anthropic-heading-xl {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .anthropic-card-body {
+        padding: var(--space-5);
+    }
+    
+    .anthropic-upload-area {
+        padding: var(--space-6) var(--space-4);
+    }
+    
+    .anthropic-heading-xl {
+        font-size: 1.5rem;
+    }
+}
