@@ -40,7 +40,7 @@ function showCustomerError($title, $message) {
         <title><?php echo htmlspecialchars($title); ?> - File Exchange</title>
         <style>
             body {
-                font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+                font-family: DIN-2014, din-2014, "DIN Next", "Segoe UI", system-ui, sans-serif;
                 background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
                 margin: 0;
                 padding: 20px;
@@ -71,7 +71,7 @@ function showCustomerError($title, $message) {
                 margin-bottom: 16px;
                 font-size: 24px;
                 font-weight: 500;
-                font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+                font-family: "DIN Rounded Medium", din-rounded-medium, "DIN Next", "Segoe UI", system-ui, sans-serif;
                 letter-spacing: -0.01em;
             }
             
@@ -108,7 +108,7 @@ function showCustomerError($title, $message) {
         }
         
         body {
-            font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+            font-family: DIN-2014, din-2014, "DIN Next", "Segoe UI", system-ui, sans-serif;
             background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
             min-height: 100vh;
             padding: 20px;

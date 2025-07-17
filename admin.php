@@ -95,7 +95,7 @@ if ($selectedSession) {
         }
         
         body {
-            font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+            font-family: DIN-2014, din-2014, "DIN Next", "Segoe UI", system-ui, sans-serif;
             background: #faf9f7;
             color: #2d3748;
             line-height: 1.6;
@@ -104,7 +104,7 @@ if ($selectedSession) {
         
         /* Typography Hierarchy - Anthropic Style */
         h1, h2, h3, h4, h5, h6 {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-family: "DIN Rounded Medium", din-rounded-medium, "DIN Next", "Segoe UI", system-ui, sans-serif;
             font-weight: 500;
             letter-spacing: -0.01em;
         }
@@ -152,7 +152,7 @@ if ($selectedSession) {
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-family: "DIN Rounded Medium", din-rounded-medium, "DIN Next", "Segoe UI", system-ui, sans-serif;
         }
         
         .new-session-btn:hover {
@@ -269,7 +269,7 @@ if ($selectedSession) {
             font-size: 18px;
             font-weight: 500;
             color: #2d3748;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-family: "DIN Rounded Medium", din-rounded-medium, "DIN Next", "Segoe UI", system-ui, sans-serif;
         }
         
         .content-area {
@@ -299,7 +299,7 @@ if ($selectedSession) {
             color: #2d3748;
             margin-bottom: 16px;
             font-weight: 500;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-family: "DIN Rounded Medium", din-rounded-medium, "DIN Next", "Segoe UI", system-ui, sans-serif;
             letter-spacing: -0.02em;
         }
         
@@ -323,7 +323,7 @@ if ($selectedSession) {
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-family: "DIN Rounded Medium", din-rounded-medium, "DIN Next", "Segoe UI", system-ui, sans-serif;
         }
         
         .create-session-btn:hover {
@@ -351,7 +351,7 @@ if ($selectedSession) {
             font-size: 24px;
             font-weight: 500;
             margin-bottom: 8px;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-family: "DIN Rounded Medium", din-rounded-medium, "DIN Next", "Segoe UI", system-ui, sans-serif;
             letter-spacing: -0.01em;
         }
         
@@ -431,7 +431,7 @@ if ($selectedSession) {
             font-size: 14px;
             cursor: pointer;
             transition: all 0.2s;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-family: "DIN Rounded Medium", din-rounded-medium, "DIN Next", "Segoe UI", system-ui, sans-serif;
             font-weight: 500;
         }
         
@@ -445,7 +445,7 @@ if ($selectedSession) {
             color: #2d3748;
             margin-bottom: 20px;
             font-size: 18px;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            font-family: "DIN Rounded Medium", din-rounded-medium, "DIN Next", "Segoe UI", system-ui, sans-serif;
             font-weight: 500;
         }
         

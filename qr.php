@@ -59,9 +59,9 @@ function generateFallbackQR($url, $size) {
     return '<?xml version="1.0" encoding="UTF-8"?>
     <svg width="' . $size . '" height="' . $size . '" xmlns="http://www.w3.org/2000/svg">
         <rect width="100%" height="100%" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2"/>
-        <text x="50%" y="40%" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#666">QR Code</text>
-        <text x="50%" y="55%" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#999">Scan to access:</text>
-        <text x="50%" y="70%" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#999">' . htmlspecialchars($shortUrl) . '</text>
+        <text x="50%" y="40%" text-anchor="middle" font-family="DIN-2014, din-2014, sans-serif" font-size="14" fill="#666">QR Code</text>
+        <text x="50%" y="55%" text-anchor="middle" font-family="DIN-2014, din-2014, sans-serif" font-size="10" fill="#999">Scan to access:</text>
+        <text x="50%" y="70%" text-anchor="middle" font-family="DIN-2014, din-2014, sans-serif" font-size="8" fill="#999">' . htmlspecialchars($shortUrl) . '</text>
     </svg>';
 }
 
@@ -81,7 +81,7 @@ function generateFallbackQR($url, $size) {
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: DIN-2014, din-2014, "DIN Next", "Segoe UI", system-ui, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -173,7 +173,7 @@ function generateFallbackQR($url, $size) {
             background: #e9ecef;
             padding: 10px;
             border-radius: 6px;
-            font-family: monospace;
+            font-family: DIN-2014, din-2014, "DIN Next", "Segoe UI", system-ui, monospace;
             font-size: 12px;
             word-break: break-all;
             margin-top: 5px;

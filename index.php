@@ -83,7 +83,7 @@ function showError($title, $message) {
         <title><?php echo htmlspecialchars($title); ?> - File Transfer</title>
         <style>
             body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                font-family: DIN-2014, din-2014, "DIN Next", "Segoe UI", system-ui, sans-serif;
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 margin: 0;
                 padding: 20px;
