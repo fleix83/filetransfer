@@ -983,9 +983,19 @@ if ($selectedSession) {
             
             // Upload single file
             function uploadFile(file) {
+                // Validate session token before upload
+                const sessionToken = '<?php echo addslashes($currentSession['token'] ?? ''); ?>';
+                console.log('Starting upload for file:', file.name, 'Session token:', sessionToken);
+                
+                if (!sessionToken) {
+                    console.error('Upload failed: No session token available');
+                    alert('Upload failed: No valid session selected');
+                    return;
+                }
+                
                 const formData = new FormData();
                 formData.append('file', file);
-                formData.append('session_token', '<?php echo addslashes($selectedSession); ?>');
+                formData.append('session_token', sessionToken);
                 formData.append('uploaded_by', 'admin');
                 
                 // Show progress
@@ -1013,19 +1023,23 @@ if ($selectedSession) {
                                 // Reload page to show new file
                                 window.location.reload();
                             } else {
+                                console.error('Upload failed:', response.error);
                                 alert('Upload failed: ' + response.error);
                             }
                         } catch (e) {
-                            alert('Upload failed: Invalid response');
+                            console.error('Upload response parsing error:', e, 'Response:', xhr.responseText);
+                            alert('Upload failed: Invalid response from server');
                         }
                     } else {
-                        alert('Upload failed: Server error');
+                        console.error('Upload HTTP error:', xhr.status, xhr.statusText, 'Response:', xhr.responseText);
+                        alert('Upload failed: Server error (HTTP ' + xhr.status + ')');
                     }
                 });
                 
                 // Handle error
                 xhr.addEventListener('error', function() {
                     uploadProgress.style.display = 'none';
+                    console.error('Upload network error for file:', file.name, 'Session token:', sessionToken);
                     alert('Upload failed: Network error');
                 });
                 
