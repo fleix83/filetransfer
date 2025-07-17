@@ -1,5 +1,16 @@
 /* Anthropic Design System - Core Styles */
-/* Based on Anthropic's brand guidelines: Deep blue primary, muted warm palette, Styrene/Tiempos typography */
+/* Based on Anthropic's brand guidelines: Deep blue primary, muted warm palette, DIN Next Rounded typography */
+
+/* Font Face Declarations */
+@font-face {
+    font-family: 'DIN Next Rounded';
+    src: url('./fonts/din-next-rounded-lt-w01-regular.woff2') format('woff2'),
+         url('./fonts/din-next-rounded-lt-w01-regular.woff') format('woff'),
+         url('./fonts/din-next-rounded-lt-w01-regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
 
 :root {
     /* Anthropic Color System - Deep Blue Primary */
@@ -42,8 +53,8 @@
     --anthropic-warning-bg: #fffff0;
     
     /* Typography */
-    --anthropic-font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
-    --anthropic-font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --anthropic-font-sans: 'DIN Next Rounded', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+    --anthropic-font-serif: 'DIN Next Rounded', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     
     /* Spacing Scale */
     --space-1: 0.25rem;
@@ -77,43 +88,51 @@
     --transition-slow: 0.3s ease;
 }
 
-/* Typography Hierarchy - Anthropic Style */
+/* Typography Hierarchy - DIN Next Rounded Style */
 .anthropic-text {
     font-family: var(--anthropic-font-serif);
     color: var(--anthropic-gray-700);
-    line-height: 1.6;
+    line-height: 1.5;
+    font-weight: 400;
 }
 
 .anthropic-heading {
     font-family: var(--anthropic-font-sans);
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    color: var(--anthropic-gray-700);
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    color: var(--anthropic-gray-800);
 }
 
 .anthropic-heading-xl {
-    font-size: 2rem;
-    letter-spacing: -0.02em;
-    font-weight: 500;
+    font-size: 2.25rem;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+    line-height: 1.1;
 }
 
 .anthropic-heading-lg {
-    font-size: 1.5rem;
-    letter-spacing: -0.01em;
+    font-size: 1.75rem;
+    letter-spacing: -0.005em;
+    font-weight: 400;
+    line-height: 1.2;
 }
 
 .anthropic-heading-md {
-    font-size: 1.125rem;
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.3;
 }
 
 .anthropic-heading-sm {
     font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4;
 }
 
 /* Button System */
 .anthropic-btn {
     font-family: var(--anthropic-font-sans);
-    font-weight: 500;
+    font-weight: 400;
     border: none;
     border-radius: var(--radius-md);
     cursor: pointer;
@@ -122,6 +141,8 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
 }
 
 .anthropic-btn:hover {
@@ -212,12 +233,13 @@
 
 /* Form Elements */
 .anthropic-input {
-    font-family: var(--anthropic-font-serif);
+    font-family: var(--anthropic-font-sans);
     width: 100%;
     padding: var(--space-3) var(--space-4);
     border: 2px solid var(--anthropic-gray-300);
     border-radius: var(--radius-md);
     font-size: 1rem;
+    font-weight: 400;
     transition: all var(--transition-normal);
     background: white;
     color: var(--anthropic-gray-700);
@@ -230,12 +252,13 @@
 }
 
 .anthropic-textarea {
-    font-family: var(--anthropic-font-serif);
+    font-family: var(--anthropic-font-sans);
     width: 100%;
     padding: var(--space-3) var(--space-4);
     border: 2px solid var(--anthropic-gray-300);
     border-radius: var(--radius-md);
     font-size: 1rem;
+    font-weight: 400;
     transition: all var(--transition-normal);
     background: white;
     color: var(--anthropic-gray-700);
@@ -252,9 +275,10 @@
 .anthropic-label {
     display: block;
     margin-bottom: var(--space-2);
-    font-weight: 500;
-    color: var(--anthropic-gray-700);
+    font-weight: 400;
+    color: var(--anthropic-gray-800);
     font-family: var(--anthropic-font-sans);
+    font-size: 0.9rem;
 }
 
 /* Alert System */
@@ -382,7 +406,7 @@
     }
     
     .anthropic-heading-xl {
-        font-size: 1.75rem;
+        font-size: 2rem;
     }
 }
 
@@ -396,6 +420,6 @@
     }
     
     .anthropic-heading-xl {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
     }
 }
